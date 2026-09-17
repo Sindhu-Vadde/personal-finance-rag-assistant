@@ -4,7 +4,7 @@ A Retrieval-Augmented Generation (RAG) system that answers personal finance ques
 
 ## Demo
 
-![Personal Finance Assistant Demo](screenshots/Demo.png)
+![Personal Finance Assistant Demo](screenshots/demo.png)
 
 ## What it does
 
