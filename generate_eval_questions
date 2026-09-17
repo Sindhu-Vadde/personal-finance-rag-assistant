@@ -1,0 +1,54 @@
+from load_data import get_combined_data
+import random
+import os
+import time
+import json
+from google import genai
+from dotenv import load_dotenv
+
+load_dotenv()
+gemini_client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+
+combined_data = get_combined_data()
+
+random.seed(42)
+sample_rows = random.sample(combined_data, 15)
+
+chat = gemini_client.chats.create(model="gemini-3.6-flash")
+
+eval_questions = []
+
+for i, row in enumerate(sample_rows):
+    prompt = f"""Based on this real personal finance question and answer from Reddit, generate ONE realistic question a user might ask a personal finance assistant. Make it natural, like a real person typing it.
+
+Original question: {row['query']}
+Original answer: {row['answer'][:500]}
+
+Just return the single generated question, nothing else."""
+
+    max_retries = 3
+    for attempt in range(max_retries):
+        try:
+            response = chat.send_message(prompt)
+            break
+        except Exception as e:
+            print(f"Attempt {attempt + 1} failed: {e}")
+            if attempt < max_retries - 1:
+                print("Waiting 15 seconds before retrying...")
+                time.sleep(15)
+            else:
+                raise
+
+    generated_question = response.text.strip()
+
+    print(f"\n--- Question {i+1} ---")
+    print(generated_question)
+
+    eval_questions.append(generated_question)
+
+print("\n\nTotal questions generated:", len(eval_questions))
+
+with open("eval_questions.json", "w") as f:
+    json.dump(eval_questions, f, indent=2)
+
+print("Saved to eval_questions.json")
