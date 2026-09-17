@@ -2,7 +2,9 @@
 
 A Retrieval-Augmented Generation (RAG) system that answers personal finance questions by retrieving relevant real-world Q&A pairs from Reddit and generating grounded, synthesized answers using Google's Gemini API.
 
-**Live demo:** [add screenshot or GIF here once captured]
+## Demo
+
+![Personal Finance Assistant Demo](screenshots/Demo.png)
 
 ## What it does
 
